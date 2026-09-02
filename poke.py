@@ -10,8 +10,7 @@ class Pokemon(TypedDict):
     height: int
     weight: int
 
-def get_pokemon(name: str) -> Pokemon:
-    response = requests.get(f"{API_URL}{name.lower()}")
+def handle_error(response: requests.Response, name: str, verbose: bool) -> None:
     try:
         response.raise_for_status()
     except requests.exceptions.HTTPError as e:
@@ -20,11 +19,14 @@ def get_pokemon(name: str) -> Pokemon:
             requests.codes.unauthorized: "...You're not Ash!",
             requests.codes.internal_server_error: "Snorlax is sleeping, try again later.",
         }
-        print(messages.get(e.response.status_code, f"Unknown error when fetching data for {name}."))
-        if(args.verbose):
+        print(messages.get(response.status_code, f"Unknown error when fetching data for {name}."))
+        if(verbose):
             print(e)
         exit(1)
 
+def get_pokemon(name: str) -> Pokemon:
+    response = requests.get(f"{API_URL}{name.lower()}")
+    handle_error(response, name, args.verbose)
     data = response.json()
     return Pokemon(
         id=data.get("id"),
