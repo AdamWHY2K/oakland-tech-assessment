@@ -43,14 +43,17 @@ def print_pokemon(pokemon: Pokemon) -> None:
     print(f"Weight: {pokemon['weight']}")
     print("-" * 20)
 
-
-if __name__ == "__main__":
+def init_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Fetch Pokemon data from the PokeAPI.")
     parser.add_argument("name", type=str, help="Name of the Pokemon to fetch.")
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output.")
     # assignment brief is unclear on if the dictionary should be pretty printed or not
     parser.add_argument("-r", "--raw", action="store_true", help="Print raw JSON data.")
-    args = parser.parse_args()
+    return parser.parse_args()
+
+
+if __name__ == "__main__":
+    args = init_args()
     pokemon_data = get_pokemon(args.name)
     if args.raw:
         print(pokemon_data)
