@@ -23,7 +23,7 @@ def get_pokemon(name: str) -> Pokemon:
         print(messages.get(e.response.status_code, f"Unknown error when fetching data for {name}."))
         if(args.verbose):
             print(e)
-        exit(-1)
+        exit(1)
 
     data = response.json()
     return Pokemon(
